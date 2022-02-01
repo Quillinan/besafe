@@ -7,7 +7,9 @@ const User = require('../../models/User')
 module.exports = {
   Mutation: {
     async register (_, { registerInput: { email, nome, sobrenome, dataDeNascimento, senha, confirmaSenha } }) {
+      
       senha = await bcrypt.hash(senha, 12)
+
       const user = await User.findOne({ email })
       if (user) {
         throw new UserInputError('email ja existe', {
