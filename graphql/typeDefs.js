@@ -12,9 +12,9 @@ module.exports = gql`
     }
     type User{
         id: ID!
-        email: String!
         nome: String!
         sobrenome: String!
+        email: String!
         dataDeNascimento: String!
         token: String!
         createdAt: String!
