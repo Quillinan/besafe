@@ -29,3 +29,17 @@ module.exports.validateRegisterInput = (
     valid: Object.keys(errors).length < 1
   }
 }
+
+module.exports.validateLoginInput = (email, senha) => {
+  const errors = {}
+  if (email.trim() === '') {
+    errors.email = 'email em branco'
+  }
+  if (senha.trim() === '') {
+    errors.senha = 'senha em branco'
+  }
+  return {
+    errors,
+    valid: Object.keys(errors).length < 1
+  }
+}
