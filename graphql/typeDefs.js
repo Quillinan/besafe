@@ -33,9 +33,12 @@ module.exports = gql`
     }
     type Query{
         getProdutos: [Produto]
+        getProduto(produtoId:ID!) : Produto
     }
     type Mutation{
         register(registerInput:RegisterInput): User!
         login(email: String!,senha:String!):User!
+        createProduto(body:String!):Produto!
+        deleteProduto(produtoId: ID!): String!
     }
 `
