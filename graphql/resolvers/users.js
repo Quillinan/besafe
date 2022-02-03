@@ -4,6 +4,7 @@ const { UserInputError } = require('apollo-server')
 const { SECRET_KEY } = require('../../config')
 const User = require('../../models/User')
 const { validateRegisterInput, validateLoginInput } = require('../../utilities/validators')
+const checkAuth = require('../../utilities/check-auth')
 
 function generateToken (user) {
   return jwt.sign({
@@ -70,6 +71,39 @@ module.exports = {
         ...res._doc,
         id: res._id,
         token
+      }
+    },
+    async updateUser(_,{updateUserInput:{id,email,nome,sobrenome,dataDeNascimento}},context){
+      const user = checkAuth(context)
+      try{
+        if (user.id === id) {
+          const user = await User.findById(id)
+          if(email){
+            const existe = await User.findOne({ email })
+            if (existe){
+              throw new UserInputError('email ja existe', {
+                errors: {
+                  email: 'email ja existe'
+                }
+              })
+            }else{
+              user.email = email
+            }
+          }
+          if (nome) {
+            user.nome = nome
+          }
+          if (sobrenome) {
+            user.sobrenome = sobrenome
+          }
+          if (dataDeNascimento) {
+            user.dataDeNascimento = dataDeNascimento
+          }
+          user.save()
+          return user
+        }
+      }catch (err) {
+        throw new Error(err)
       }
     }
   }
