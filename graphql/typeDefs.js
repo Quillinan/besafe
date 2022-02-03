@@ -7,6 +7,7 @@ module.exports = gql`
         descricao: String!
         preco: Float!
         quantidade: Int!
+        user:ID!
         createdAt: String!
         updatedAt: String!
     }
@@ -31,6 +32,12 @@ module.exports = gql`
         
         
     }
+    input ProdutoInput {
+        nome: String!
+        descricao: String!
+        preco: Float!
+        quantidade: Int!
+    }
     type Query{
         getProdutos: [Produto]
         getProduto(produtoId:ID!) : Produto
@@ -38,7 +45,7 @@ module.exports = gql`
     type Mutation{
         register(registerInput:RegisterInput): User!
         login(email: String!,senha:String!):User!
-        createProduto(body:String!):Produto!
+        createProduto(produtoInput:ProdutoInput):Produto!
         deleteProduto(produtoId: ID!): String!
     }
 `
