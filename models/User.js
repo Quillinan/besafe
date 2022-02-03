@@ -1,5 +1,4 @@
 const { model, Schema } = require('mongoose')
-
 const userSchema = new Schema({
   nome: String,
   sobrenome: String,
@@ -7,8 +6,7 @@ const userSchema = new Schema({
   dataDeNascimento: String,
   senha: String,
   createdAt: String,
-  updatedAt: String
-
+  updatedAt: String,
 })
 
 module.exports = model('User', userSchema)

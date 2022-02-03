@@ -4,15 +4,20 @@ const { AuthenticationError } = require('apollo-server')
 
 module.exports = {
   Query: {
-    async getProdutos (_,{},context) {
+    async getProdutos (_, args, context) {
+      const user = checkAuth(context)
       try {
-        const produtos = await Produto.find()
-        return produtos
+        const produtos = await Produto.find({ user: user.id })
+        if (produtos.length === 0) {
+          throw new Error('Nenhum produto encontrado')
+        } else {
+          return produtos
+        }
       } catch (err) {
         throw new Error(err)
       }
     },
-    async getProduto (_, { produtoId },context) {
+    async getProduto (_, { produtoId }, context) {
       const user = checkAuth(context)
       try {
         const produto = await Produto.findById(produtoId)
@@ -41,21 +46,21 @@ module.exports = {
       const produto = await newProduto.save()
       return produto
     },
-    async updateProduto (_, { updateProdutoInput: { id,nome, descricao, preco, quantidade } }, context) {
+    async updateProduto (_, { updateProdutoInput: { id, nome, descricao, preco, quantidade } }, context) {
       const user = checkAuth(context)
       try {
         const produto = await Produto.findById(id)
         if (user.id === produto.user.toString()) {
-          if(nome){
+          if (nome) {
             produto.nome = nome
           }
-          if(descricao){
+          if (descricao) {
             produto.descricao = descricao
           }
-          if(preco){
+          if (preco) {
             produto.preco = preco
           }
-          if(quantidade){
+          if (quantidade) {
             produto.quantidade = quantidade
           }
           produto.save()
@@ -66,7 +71,6 @@ module.exports = {
       } catch (err) {
         throw new Error(err)
       }
-     
     },
     async deleteProduto (_, { produtoId }, context) {
       const user = checkAuth(context)

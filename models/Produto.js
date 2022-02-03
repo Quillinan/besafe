@@ -1,5 +1,4 @@
 const { model, Schema } = require('mongoose')
-
 const produtoSchema = new Schema({
   nome: String,
   descricao: String,
@@ -9,7 +8,7 @@ const produtoSchema = new Schema({
   updatedAt: String,
   user: {
     type: Schema.Types.ObjectId,
-    ref: 'users'
+    ref: 'User'
   }
 
 })
