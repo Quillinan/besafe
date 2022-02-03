@@ -42,12 +42,9 @@ module.exports = {
     },
     async deleteProduto (_, { produtoId }, context) {
       const user = checkAuth(context)
-      console.log(user.id)
       try {
         const produto = await Produto.findById(produtoId)
-        console.log(produto.user)
-        console.log(produto.id)
-        if (user.id === produto.user) {
+        if (user.id === produto.user.toString()) {
           await produto.delete()
           return 'Produto deletado'
         } else {
