@@ -4,7 +4,7 @@ const { AuthenticationError } = require('apollo-server')
 
 module.exports = {
   Query: {
-    async getProdutos (_,{}, context) {
+    async getProdutos (_, {}, context) {
       const user = checkAuth(context)
       try {
         const produtos = await Produto.find({ user: user.id })

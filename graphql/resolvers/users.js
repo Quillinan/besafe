@@ -1,6 +1,6 @@
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
-const { UserInputError } = require('apollo-server')
+const { UserInputError, AuthenticationError } = require('apollo-server')
 const { SECRET_KEY } = require('../../config')
 const User = require('../../models/User')
 const { validateRegisterInput, validateLoginInput } = require('../../utilities/validators')
@@ -73,20 +73,20 @@ module.exports = {
         token
       }
     },
-    async updateUser(_,{updateUserInput:{id,email,nome,sobrenome,dataDeNascimento}},context){
+    async updateUser (_, { updateUserInput: { id, email, nome, sobrenome, dataDeNascimento } }, context) {
       const user = checkAuth(context)
-      try{
+      try {
         if (user.id === id) {
           const user = await User.findById(id)
-          if(email){
+          if (email) {
             const existe = await User.findOne({ email })
-            if (existe){
+            if (existe) {
               throw new UserInputError('email ja existe', {
                 errors: {
                   email: 'email ja existe'
                 }
               })
-            }else{
+            } else {
               user.email = email
             }
           }
@@ -101,22 +101,24 @@ module.exports = {
           }
           user.save()
           return user
+        } else {
+          throw new AuthenticationError('Acao proibida')
         }
-      }catch (err) {
+      } catch (err) {
         throw new Error(err)
       }
     },
     async deleteUser (_, { userId }, context) {
       const user = checkAuth(context)
-      try{
-        if(user.id === userId){
+      try {
+        if (user.id === userId) {
           const user = await User.findById(userId)
           await user.delete()
           return 'Usuario deletado'
-        } else{
+        } else {
           throw new AuthenticationError('Acao proibida')
         }
-      }  catch (err) {
+      } catch (err) {
         throw new Error(err)
       }
     }
