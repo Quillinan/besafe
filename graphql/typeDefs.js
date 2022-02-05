@@ -49,7 +49,7 @@ module.exports = gql`
         quantidade: Int
     }
     type Query{
-        getProdutos: [Produto]
+        getProdutos(offset:Int, limit:Int): [Produto]
         getProduto(produtoId:ID!) : Produto
     }
     type Mutation{

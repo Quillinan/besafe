@@ -4,10 +4,10 @@ const { AuthenticationError } = require('apollo-server')
 
 module.exports = {
   Query: {
-    async getProdutos (_, {}, context) {
+    async getProdutos (_, { offset, limit }, context) {
       const user = checkAuth(context)
       try {
-        const produtos = await Produto.find({ user: user.id })
+        let produtos = await Produto.find({ user: user.id }).skip(offset||0).limit(limit||15)
         if (produtos.length === 0) {
           throw new Error('Nenhum produto encontrado')
         } else {
