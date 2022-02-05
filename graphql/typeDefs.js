@@ -29,7 +29,7 @@ module.exports = gql`
         confirmaSenha: String!
     }
     input UpdateUserInput {
-        id: ID!
+        id:ID!
         email: String
         nome: String
         sobrenome: String
@@ -56,6 +56,7 @@ module.exports = gql`
         login(email: String!,senha:String!):User!
         register(registerInput:RegisterInput): User!
         updateUser(updateUserInput:UpdateUserInput):User!
+        deleteUser(userId:ID!):String!
         createProduto(createProdutoInput:CreateProdutoInput):Produto!
         updateProduto(updateProdutoInput:UpdateProdutoInput):Produto!
         deleteProduto(produtoId: ID!): String!

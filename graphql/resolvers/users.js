@@ -105,6 +105,20 @@ module.exports = {
       }catch (err) {
         throw new Error(err)
       }
+    },
+    async deleteUser (_, { userId }, context) {
+      const user = checkAuth(context)
+      try{
+        if(user.id === userId){
+          const user = await User.findById(userId)
+          await user.delete()
+          return 'Usuario deletado'
+        } else{
+          throw new AuthenticationError('Acao proibida')
+        }
+      }  catch (err) {
+        throw new Error(err)
+      }
     }
   }
 }
