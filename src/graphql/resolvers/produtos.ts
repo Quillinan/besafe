@@ -1,13 +1,13 @@
-const Produto = require('../../models/Produto')
-const checkAuth = require('../../utilities/check-auth')
-const { AuthenticationError } = require('apollo-server')
+import { Produto } from '../../models/Produto'
+import checkAuth from '../../utilities/check-auth'
+import { AuthenticationError } from 'apollo-server'
 
-module.exports = {
+export default {
   Query: {
-    async getProdutos (_, { offset, limit }, context) {
+    async getProdutos (parent:unknown, { offset, limit }:{offset:number,limit:number}, context:unknown) {
       const user = checkAuth(context)
       try {
-        let produtos = await Produto.find({ user: user.id }).skip(offset||0).limit(limit||15)
+        const produtos = await Produto.find({ user: user.id }).skip(offset || 0).limit(limit || 15)
         if (produtos.length === 0) {
           throw new Error('Nenhum produto encontrado')
         } else {
@@ -17,11 +17,11 @@ module.exports = {
         throw new Error(err)
       }
     },
-    async getProduto (_, { produtoId }, context) {
+    async getProduto (parent:unknown, { produtoId }:{produtoId:Number}, context:unknown) {
       const user = checkAuth(context)
       try {
         const produto = await Produto.findById(produtoId)
-        if (produto && user.id === produto.user.toString()) {
+        if ((produto != null) && user.id === produto.user.toString()) {
           return produto
         } else {
           throw new Error('Produto nao encontrado ou sem permissao')
@@ -46,7 +46,7 @@ module.exports = {
       const produto = await newProduto.save()
       return produto
     },
-    async updateProduto (_, { updateProdutoInput: { id, nome, descricao, preco, quantidade } }, context) {
+    async updateProduto (parent:unknown, { updateProdutoInput: { id, nome, descricao, preco, quantidade } }, context:unknown) {
       const user = checkAuth(context)
       try {
         const produto = await Produto.findById(id)

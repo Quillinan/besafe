@@ -1,10 +1,10 @@
-const bcrypt = require('bcryptjs')
-const jwt = require('jsonwebtoken')
-const { UserInputError, AuthenticationError } = require('apollo-server')
-const { SECRET_KEY } = require('../../config')
-const User = require('../../models/User')
-const { validateRegisterInput, validateLoginInput } = require('../../utilities/validators')
-const checkAuth = require('../../utilities/check-auth')
+import bcrypt from 'bcryptjs'
+import jwt from 'jsonwebtoken'
+import { UserInputError, AuthenticationError } from 'apollo-server'
+import { SECRET_KEY } from 'src/../../config'
+import { User } from '../../models/User'
+import { validateRegisterInput, validateLoginInput } from '/../../utilities/validators'
+import checkAuth from '../../utilities/check-auth'
 
 function generateToken (user) {
   return jwt.sign({
@@ -13,7 +13,7 @@ function generateToken (user) {
   }, SECRET_KEY, { expiresIn: '1h' })
 }
 
-module.exports = {
+export default {
   Mutation: {
     async login (_, { email, senha }) {
       const { errors, valid } = validateLoginInput(email, senha)
@@ -23,7 +23,7 @@ module.exports = {
 
       const user = await User.findOne({ email })
 
-      if (!user) {
+      if (user == null) {
         errors.general = 'Email ou senha incorretos'
         throw new UserInputError('Email ou senha incorretos', { errors })
       }
@@ -45,7 +45,7 @@ module.exports = {
         throw new UserInputError('Errors', { errors })
       }
       const user = await User.findOne({ email })
-      if (user) {
+      if (user != null) {
         throw new UserInputError('email ja existe', {
           errors: {
             email: 'email ja existe'
@@ -80,7 +80,7 @@ module.exports = {
           const user = await User.findById(id)
           if (email) {
             const existe = await User.findOne({ email })
-            if (existe) {
+            if (existe != null) {
               throw new UserInputError('email ja existe', {
                 errors: {
                   email: 'email ja existe'

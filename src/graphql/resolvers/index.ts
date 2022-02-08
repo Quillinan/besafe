@@ -1,7 +1,7 @@
-const produtosResolvers = require('./produtos')
-const usersResolvers = require('./users')
+import produtosResolvers from './produtos'
+import usersResolvers from './users'
 
-module.exports = {
+export default {
   Query: {
     ...produtosResolvers.Query
   },
